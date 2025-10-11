@@ -11,6 +11,7 @@ import { fakesCategories } from 'src/data/categories';
 import { ProductVariantDto } from './dto/product-variant.dto';
 import { AlreadyExistsError, NotFoundError } from 'src/common/errors';
 import { CreateVariantDto } from './dto/create-variant.dto';
+import { UpdateVariantDto } from './dto/update-variant.dto';
 
 @Injectable()
 export class ProductsService {
@@ -36,31 +37,26 @@ export class ProductsService {
 
     let results = this.products.filter((p) => !p.archived && !p.parentId);
 
-    if (name) {
+    if (name)
       results = results.filter((p) =>
         p.name.toLowerCase().includes(name.toLowerCase()),
       );
-    }
 
-    if (sku) {
+    if (sku)
       results = results.filter((p) =>
         p.sku.toLowerCase().includes(sku.toLowerCase()),
       );
-    }
 
-    if (categoryId) {
+    if (categoryId)
       results = results.filter(
         (p) => p.categoryId == +categoryId,
       );
-    }
 
-    if (minPrice) {
+    if (minPrice)
       results = results.filter((p) => p.price >= +minPrice);
-    }
 
-    if (maxPrice) {
+    if (maxPrice)
       results = results.filter((p) => p.price <= +maxPrice);
-    }
 
     const total = results.length;
 
@@ -83,17 +79,16 @@ export class ProductsService {
     };
   }
 
-  async create(createProductDto: CreateProductDto): Promise<Product> {
+  async create(createProductDto: CreateProductDto): Promise<ProductResponseDto> {
     const category = this.categories.find(c => c.id === createProductDto.categoryId);
 
-    if (!category) {
+    if (!category)
       throw new NotFoundError('Category', String(createProductDto.categoryId));
-    }
+
     const existingProduct = this.products.find(p => p.sku.toLowerCase() === createProductDto.sku.toLowerCase() && !p.archived);
 
-    if (existingProduct) {
+    if (existingProduct)
       throw new AlreadyExistsError('Product', `${createProductDto.sku}`, 'sku');
-    }
 
     const newProduct: Product = {
       id: this.products.length + 1,
@@ -103,21 +98,19 @@ export class ProductsService {
 
     this.products.push(newProduct);
 
-    return newProduct;
+    return ProductResponseDto.fromEntity(newProduct, this.products, this.categories);
   }
 
   async createVariant(createVariantDto: CreateVariantDto): Promise<ProductVariantDto> {
-    const existingVariant = this.products.find(p => p.sku.toLowerCase() === createVariantDto.sku.toLowerCase() && !p.archived);
+    const existingProduct = this.products.find(p => p.sku.toLowerCase() === createVariantDto.sku.toLowerCase() && !p.archived);
 
-    if (existingVariant) {
-      throw new AlreadyExistsError('Product variant', `${createVariantDto.sku}`, 'sku');
-    }
+    if (existingProduct)
+      throw new AlreadyExistsError('Product', `${createVariantDto.sku}`, 'sku');
 
     const parentProduct = this.products.find(p => p.id === createVariantDto.parentId && !p.archived);
 
-    if (!parentProduct) {
+    if (!parentProduct)
       throw new NotFoundError('Product', String(createVariantDto.parentId));
-    }
 
     const newVariant: Product = {
       id: this.products.length + 1,
@@ -134,9 +127,8 @@ export class ProductsService {
   async findOne(id: number): Promise<ProductResponseDto> {
     const productEntity = this.products.find(product => product.id === id && !product.archived);
 
-    if (!productEntity) {
+    if (!productEntity)
       throw new NotFoundError('Product', String(id));
-    }
 
     return ProductResponseDto.fromEntity(productEntity, this.products, this.categories);
   }
@@ -144,23 +136,44 @@ export class ProductsService {
   async update(id: number, updateProductDto: UpdateProductDto): Promise<ProductResponseDto> {
     const productEntity = await this.products.find(product => product.id === id && !product.archived);
 
-    if (!productEntity) {
+    if (!productEntity)
       throw new NotFoundError('Product', String(id));
-    }
+
+    const existingProduct = this.products.find(p => updateProductDto.sku && p.sku.toLowerCase() === updateProductDto.sku.toLowerCase() && !p.archived && p.id !== id);
+
+    if (existingProduct)
+      throw new AlreadyExistsError('Product', `${updateProductDto.sku}`, 'sku');
+
 
     Object.assign(productEntity, updateProductDto);
 
     return ProductResponseDto.fromEntity(productEntity, this.products, this.categories);
   }
 
-  async remove(id: number): Promise<boolean> {
+  async updateVariant(id: number, updateVariantDto: UpdateVariantDto): Promise<ProductVariantDto> {
+    const productEntity = await this.products.find(product => product.id === id && !product.archived);
+
+    if (!productEntity)
+      throw new NotFoundError('Product', String(id));
+
+
+    const existingProduct = this.products.find(p => updateVariantDto.sku && p.sku.toLowerCase() === updateVariantDto.sku.toLowerCase() && !p.archived && p.id !== id);
+
+    if (existingProduct)
+      throw new AlreadyExistsError('Product', `${updateVariantDto.sku}`, 'sku');
+
+    Object.assign(productEntity, updateVariantDto);
+
+    return ProductResponseDto.fromEntity(productEntity, this.products, this.categories);
+  }
+
+  async remove(id: number) {
     const productEntity = this.products.find(product => product.id === id && !product.archived);
 
-    if (!productEntity) {
+    if (!productEntity)
       throw new NotFoundError('Product', String(id));
-    }
 
-    return true;
+    productEntity.archived = true;
   }
 }
 

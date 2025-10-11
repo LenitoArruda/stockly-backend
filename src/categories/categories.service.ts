@@ -13,9 +13,8 @@ export class CategoriesService {
   async create(createCategoryDto: CreateCategoryDto): Promise<CategoryResponseDto> {
     const existingCategory = this.categories.find(cat => cat.name.toLowerCase() === createCategoryDto.name.toLowerCase() && !cat.archived);
 
-    if (existingCategory) {
+    if (existingCategory)
       throw new AlreadyExistsError("Category", `${createCategoryDto.name}`, "name");
-    }
 
     const newCategory: Category = {
       id: this.categories.length + 1,
@@ -37,9 +36,8 @@ export class CategoriesService {
   async findOne(id: number): Promise<CategoryResponseDto> {
     const category = this.categories.find(category => category.id === id && !category.archived);
 
-    if (!category) {
+    if (!category)
       throw new NotFoundError("Category", String(id));
-    }
 
     return CategoryResponseDto.fromEntity(category);
   }
@@ -47,30 +45,25 @@ export class CategoriesService {
   async update(id: number, updateCategoryDto: UpdateCategoryDto): Promise<CategoryResponseDto> {
     const category = this.categories.find(category => category.id === id && !category.archived);
 
-    if (!category) {
+    if (!category)
       throw new NotFoundError("Category", String(id));
-    }
 
     const existingCategory = this.categories.find(cat => cat.name.toLowerCase() === updateCategoryDto.name?.toLowerCase() && cat.id !== id && !cat.archived);
 
-    if (existingCategory) {
+    if (existingCategory)
       throw new AlreadyExistsError("Category", `${updateCategoryDto.name}`, "name");
-    }
 
     Object.assign(category, updateCategoryDto);
 
     return CategoryResponseDto.fromEntity(category);
   }
 
-  async remove(id: number): Promise<boolean> {
+  async remove(id: number) {
     const category = this.categories.find(category => category.id === id && !category.archived);
 
-    if (!category) {
+    if (!category)
       throw new NotFoundError("Category", String(id));
-    }
 
     category.archived = true;
-
-    return true;
   }
 }

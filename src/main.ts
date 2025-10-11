@@ -7,8 +7,7 @@ import { AlreadyExistsErrorFilter } from "./common/filters/already-exists-error.
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
-  app.useGlobalFilters(new NotFoundErrorFilter());
-  app.useGlobalFilters(new AlreadyExistsErrorFilter());
+  app.useGlobalFilters(new NotFoundErrorFilter(), new AlreadyExistsErrorFilter());
 
   app.useGlobalPipes(new ValidationPipe({
     errorHttpStatusCode: 422,
