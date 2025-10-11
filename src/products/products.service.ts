@@ -2,30 +2,39 @@ import { Injectable } from '@nestjs/common';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { Product } from './entities/product.entity';
-import { fakesProducts } from 'src/data/products';
 import { PaginatedProductsDto } from './dto/paginated-products.dto';
 import { FilterProductsDto } from './dto/filter-products.dto';
+import { fakesProducts } from 'src/data/products';
+import { ProductResponseDto } from './dto/product-response.dto';
+import { Category } from 'src/categories/entities/category.entity';
+import { fakesCategories } from 'src/data/categories';
+import { ProductVariantDto } from './dto/product-variant.dto';
+import { AlreadyExistsError, NotFoundError } from 'src/common/errors';
+import { CreateVariantDto } from './dto/create-variant.dto';
 
 @Injectable()
 export class ProductsService {
   private products: Product[] = fakesProducts;
+  private categories: Category[] = fakesCategories;
 
-  findAll(): Product[] {
-    return this.products.filter(product => !product.archived);
+  async findAll(): Promise<ProductResponseDto[]> {
+    const products = this.products.filter(product => !product.archived);
+
+    return products.map((p) => ProductResponseDto.fromEntity(p, this.products, this.categories));
   }
 
-  findPaginated(filter: FilterProductsDto): PaginatedProductsDto {
+  async findPaginated(filter: FilterProductsDto): Promise<PaginatedProductsDto> {
     const {
       name,
       sku,
-      category,
+      categoryId,
       minPrice,
       maxPrice,
       page = '1',
       pageSize = '10',
     } = filter;
 
-    let results = this.products.filter((p) => !p.archived);
+    let results = this.products.filter((p) => !p.archived && !p.parentId);
 
     if (name) {
       results = results.filter((p) =>
@@ -39,9 +48,9 @@ export class ProductsService {
       );
     }
 
-    if (category) {
+    if (categoryId) {
       results = results.filter(
-        (p) => p.category.toLowerCase() === category.toLowerCase(),
+        (p) => p.categoryId == +categoryId,
       );
     }
 
@@ -61,7 +70,9 @@ export class ProductsService {
     const startIndex = (pageNum - 1) * pageSizeNum;
     const endIndex = startIndex + pageSizeNum;
 
-    const data = results.slice(startIndex, endIndex);
+    const data = results
+      .slice(startIndex, endIndex)
+      .map((p) => ProductResponseDto.fromEntity(p, this.products, this.categories));
 
     return {
       total,
@@ -72,7 +83,18 @@ export class ProductsService {
     };
   }
 
-  create(createProductDto: CreateProductDto): Product {
+  async create(createProductDto: CreateProductDto): Promise<Product> {
+    const category = this.categories.find(c => c.id === createProductDto.categoryId);
+
+    if (!category) {
+      throw new NotFoundError("Category", String(createProductDto.categoryId));
+    }
+    const existingProduct = this.products.find(p => p.sku.toLowerCase() === createProductDto.sku.toLowerCase() && !p.archived);
+
+    if (existingProduct) {
+      throw new AlreadyExistsError("Product", `${createProductDto.sku}`, "sku");
+    }
+
     const newProduct: Product = {
       id: this.products.length + 1,
       ...createProductDto,
@@ -84,27 +106,61 @@ export class ProductsService {
     return newProduct;
   }
 
-  findOne(id: number): Product | undefined {
-    return this.products.find(product => product.id === id && !product.archived);
-  }
+  async createVariant(createVariantDto: CreateVariantDto): Promise<ProductVariantDto> {
+    const existingVariant = this.products.find(p => p.sku.toLowerCase() === createVariantDto.sku.toLowerCase() && !p.archived);
 
-  update(id: number, updateProductDto: UpdateProductDto): Product | undefined {
-    const product = this.findOne(id);
-
-    if (product) {
-      Object.assign(product, updateProductDto);
+    if (existingVariant) {
+      throw new AlreadyExistsError("Product variant", `${createVariantDto.sku}`, "sku");
     }
 
-    return product;
+    const parentProduct = this.products.find(p => p.id === createVariantDto.parentId && !p.archived);
+
+    if (!parentProduct) {
+      throw new NotFoundError("Product", String(createVariantDto.parentId));
+    }
+
+    const newVariant: Product = {
+      id: this.products.length + 1,
+      categoryId: parentProduct.categoryId,
+      archived: false,
+      ...createVariantDto
+    };
+
+    this.products.push(newVariant);
+
+    return ProductVariantDto.fromEntity(newVariant);
   }
 
-  remove(id: number): boolean {
-    const product = this.findOne(id);
+  async findOne(id: number): Promise<ProductResponseDto> {
+    const productEntity = this.products.find(product => product.id === id && !product.archived);
 
-    if (product) {
-      product.archived = true;
+    if (!productEntity) {
+      throw new NotFoundError("Product", String(id));
+    }
+
+    return ProductResponseDto.fromEntity(productEntity, this.products, this.categories);
+  }
+
+  async update(id: number, updateProductDto: UpdateProductDto): Promise<ProductResponseDto> {
+    const productEntity = await this.products.find(product => product.id === id && !product.archived);
+
+    if (!productEntity) {
+      throw new NotFoundError("Product", String(id));
+    }
+
+    Object.assign(productEntity, updateProductDto);
+
+    return ProductResponseDto.fromEntity(productEntity, this.products, this.categories);
+  }
+
+  async remove(id: number): Promise<boolean> {
+    const productEntity = this.products.find(product => product.id === id && !product.archived);
+
+    if (!productEntity) {
+      throw new NotFoundError("Product", String(id));
     }
 
     return true;
   }
 }
+

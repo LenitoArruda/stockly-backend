@@ -1,3 +1,5 @@
+######################### Products Routes #########################
+
 ### Get all products
 GET http://localhost:3000/products
 
@@ -12,3 +14,23 @@ POST http://localhost:3000/products
 
 ### Update a product
 PATCH http://localhost:3000/products/1
+
+### Delete a product
+DELETE http://localhost:3000/products/1
+
+######################### Categories Routes #########################
+
+### Get all categories
+GET http://localhost:3000/categories
+
+### Get a category by ID
+GET http://localhost:3000/categories/by-id/1
+
+### Create a new category
+POST http://localhost:3000/categories
+
+### Update a category
+PATCH http://localhost:3000/categories/1
+
+### Delete a category
+DELETE http://localhost:3000/categories/1

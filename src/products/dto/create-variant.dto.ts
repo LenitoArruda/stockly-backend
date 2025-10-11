@@ -1,6 +1,6 @@
 import { IsString, IsNumber, IsArray, IsOptional, IsObject, MaxLength, IsNotEmpty, IsPositive, Min, Matches } from 'class-validator';
 
-export class CreateProductDto {
+export class CreateVariantDto {
     @MaxLength(255)
     @IsNotEmpty()
     @IsString()
@@ -21,7 +21,11 @@ export class CreateProductDto {
     @IsPositive()
     stock: number;
 
-    @IsNumber()
     @IsNotEmpty()
-    categoryId: number;
+    @IsNumber()
+    parentId: number;
+
+    @IsNotEmpty()
+    @IsArray()
+    attributes: Record<string, string>;
 }

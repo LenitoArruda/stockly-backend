@@ -1,8 +1,9 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query, HttpCode } from '@nestjs/common';
 import { ProductsService } from './products.service';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { FilterProductsDto } from './dto/filter-products.dto';
+import { CreateVariantDto } from './dto/create-variant.dto';
 
 @Controller('products')
 export class ProductsController {
@@ -11,6 +12,11 @@ export class ProductsController {
   @Post()
   create(@Body() createProductDto: CreateProductDto) {
     return this.productsService.create(createProductDto);
+  }
+
+  @Post('variant')
+  createVariant(@Body() createVariantDto: CreateVariantDto) {
+    return this.productsService.createVariant(createVariantDto);
   }
 
   @Get()
@@ -33,6 +39,7 @@ export class ProductsController {
     return this.productsService.update(+id, updateProductDto);
   }
 
+  @HttpCode(204)
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.productsService.remove(+id);

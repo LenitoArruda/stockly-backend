@@ -3,12 +3,20 @@ import { CreateCategoryDto } from './dto/create-category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
 import { fakesCategories } from 'src/data/categories';
 import { Category } from './entities/category.entity';
+import { AlreadyExistsError, NotFoundError } from 'src/common/errors';
+import { CategoryResponseDto } from './dto/category-response.dto';
 
 @Injectable()
 export class CategoriesService {
   private categories: Category[] = fakesCategories;
 
-  create(createCategoryDto: CreateCategoryDto): Category {
+  async create(createCategoryDto: CreateCategoryDto): Promise<CategoryResponseDto> {
+    const existingCategory = this.categories.find(cat => cat.name.toLowerCase() === createCategoryDto.name.toLowerCase() && !cat.archived);
+
+    if (existingCategory) {
+      throw new AlreadyExistsError("Category", `${createCategoryDto.name}`, "name");
+    }
+
     const newCategory: Category = {
       id: this.categories.length + 1,
       ...createCategoryDto,
@@ -17,33 +25,51 @@ export class CategoriesService {
 
     this.categories.push(newCategory);
 
-    return newCategory;
+    return CategoryResponseDto.fromEntity(newCategory);
   }
 
-  findAll(): Category[] {
-    return this.categories.filter(category => !category.archived);
+  async findAll(): Promise<CategoryResponseDto[]> {
+    return this.categories
+      .filter(category => !category.archived)
+      .map(cat => CategoryResponseDto.fromEntity(cat));
   }
 
-  findOne(id: number): Category | undefined {
-    return this.categories.find(category => category.id === id && !category.archived);
-  }
+  async findOne(id: number): Promise<CategoryResponseDto> {
+    const category = this.categories.find(category => category.id === id && !category.archived);
 
-  update(id: number, updateCategoryDto: UpdateCategoryDto): Category | undefined {
-    const category = this.findOne(id);
-
-    if (category) {
-      Object.assign(category, updateCategoryDto);
+    if (!category) {
+      throw new NotFoundError("Category", String(id));
     }
 
-    return category;
+    return CategoryResponseDto.fromEntity(category);
   }
 
-  remove(id: number): boolean {
-    const category = this.findOne(id);
+  async update(id: number, updateCategoryDto: UpdateCategoryDto): Promise<CategoryResponseDto> {
+    const category = this.categories.find(category => category.id === id && !category.archived);
 
-    if (category) {
-      category.archived = true;
+    if (!category) {
+      throw new NotFoundError("Category", String(id));
     }
+
+    const existingCategory = this.categories.find(cat => cat.name.toLowerCase() === updateCategoryDto.name?.toLowerCase() && cat.id !== id && !cat.archived);
+
+    if (existingCategory) {
+      throw new AlreadyExistsError("Category", `${updateCategoryDto.name}`, "name");
+    }
+
+    Object.assign(category, updateCategoryDto);
+
+    return CategoryResponseDto.fromEntity(category);
+  }
+
+  async remove(id: number): Promise<boolean> {
+    const category = this.categories.find(category => category.id === id && !category.archived);
+
+    if (!category) {
+      throw new NotFoundError("Category", String(id));
+    }
+
+    category.archived = true;
 
     return true;
   }
