@@ -1,4 +1,4 @@
-import { IsOptional, IsString, IsNumberString } from "class-validator";
+import { IsOptional, IsString, IsNumberString, IsIn } from "class-validator";
 
 export class FilterProductsDto {
     @IsOptional()
@@ -28,4 +28,12 @@ export class FilterProductsDto {
     @IsOptional()
     @IsNumberString()
     pageSize?: string;
+
+    @IsOptional()
+    @IsIn(['name', 'sku', 'category', 'stock', 'price'])
+    sortBy?: string;
+
+    @IsOptional()
+    @IsIn(['asc', 'desc'])
+    sortOrder?: string;
 }
