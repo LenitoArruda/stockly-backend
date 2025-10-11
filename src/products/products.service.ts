@@ -90,17 +90,21 @@ export class ProductsService {
 
   update(id: number, updateProductDto: UpdateProductDto): Product | undefined {
     const product = this.findOne(id);
+
     if (product) {
       Object.assign(product, updateProductDto);
     }
+
     return product;
   }
 
   remove(id: number): boolean {
     const product = this.findOne(id);
+
     if (product) {
       product.archived = true;
     }
+
     return true;
   }
 }
