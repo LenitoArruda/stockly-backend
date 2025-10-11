@@ -87,12 +87,12 @@ export class ProductsService {
     const category = this.categories.find(c => c.id === createProductDto.categoryId);
 
     if (!category) {
-      throw new NotFoundError("Category", String(createProductDto.categoryId));
+      throw new NotFoundError('Category', String(createProductDto.categoryId));
     }
     const existingProduct = this.products.find(p => p.sku.toLowerCase() === createProductDto.sku.toLowerCase() && !p.archived);
 
     if (existingProduct) {
-      throw new AlreadyExistsError("Product", `${createProductDto.sku}`, "sku");
+      throw new AlreadyExistsError('Product', `${createProductDto.sku}`, 'sku');
     }
 
     const newProduct: Product = {
@@ -110,13 +110,13 @@ export class ProductsService {
     const existingVariant = this.products.find(p => p.sku.toLowerCase() === createVariantDto.sku.toLowerCase() && !p.archived);
 
     if (existingVariant) {
-      throw new AlreadyExistsError("Product variant", `${createVariantDto.sku}`, "sku");
+      throw new AlreadyExistsError('Product variant', `${createVariantDto.sku}`, 'sku');
     }
 
     const parentProduct = this.products.find(p => p.id === createVariantDto.parentId && !p.archived);
 
     if (!parentProduct) {
-      throw new NotFoundError("Product", String(createVariantDto.parentId));
+      throw new NotFoundError('Product', String(createVariantDto.parentId));
     }
 
     const newVariant: Product = {
@@ -135,7 +135,7 @@ export class ProductsService {
     const productEntity = this.products.find(product => product.id === id && !product.archived);
 
     if (!productEntity) {
-      throw new NotFoundError("Product", String(id));
+      throw new NotFoundError('Product', String(id));
     }
 
     return ProductResponseDto.fromEntity(productEntity, this.products, this.categories);
@@ -145,7 +145,7 @@ export class ProductsService {
     const productEntity = await this.products.find(product => product.id === id && !product.archived);
 
     if (!productEntity) {
-      throw new NotFoundError("Product", String(id));
+      throw new NotFoundError('Product', String(id));
     }
 
     Object.assign(productEntity, updateProductDto);
@@ -157,7 +157,7 @@ export class ProductsService {
     const productEntity = this.products.find(product => product.id === id && !product.archived);
 
     if (!productEntity) {
-      throw new NotFoundError("Product", String(id));
+      throw new NotFoundError('Product', String(id));
     }
 
     return true;

@@ -10,7 +10,7 @@ export class AlreadyExistsErrorFilter implements ExceptionFilter {
 
         response.status(409).json({
             statusCode: 409,
-            message: 'Already exists',
+            message: "Already exists",
         });
     }
 };

@@ -1,4 +1,4 @@
-import { IsString, IsNumber, IsArray, IsOptional, IsObject, MaxLength, IsNotEmpty, IsPositive, Min, Matches } from 'class-validator';
+import { IsString, IsNumber, IsArray, IsOptional, IsObject, MaxLength, IsNotEmpty, IsPositive, Min, Matches } from "class-validator";
 
 export class CreateVariantDto {
     @MaxLength(255)
@@ -8,7 +8,7 @@ export class CreateVariantDto {
 
     @MaxLength(50)
     @IsString()
-    @Matches(/^[a-zA-Z0-9-]+$/, { message: 'sku can only contain alphanumeric characters and hyphens' })
+    @Matches(/^[a-zA-Z0-9-]+$/, { message: "sku can only contain alphanumeric characters and hyphens" })
     sku: string;
 
     @IsNumber({ maxDecimalPlaces: 2 })

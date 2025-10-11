@@ -1,10 +1,10 @@
-import { Injectable } from '@nestjs/common';
-import { CreateCategoryDto } from './dto/create-category.dto';
-import { UpdateCategoryDto } from './dto/update-category.dto';
-import { fakesCategories } from 'src/data/categories';
-import { Category } from './entities/category.entity';
-import { AlreadyExistsError, NotFoundError } from 'src/common/errors';
-import { CategoryResponseDto } from './dto/category-response.dto';
+import { Injectable } from "@nestjs/common";
+import { CreateCategoryDto } from "./dto/create-category.dto";
+import { UpdateCategoryDto } from "./dto/update-category.dto";
+import { fakesCategories } from "src/data/categories";
+import { Category } from "./entities/category.entity";
+import { AlreadyExistsError, NotFoundError } from "src/common/errors";
+import { CategoryResponseDto } from "./dto/category-response.dto";
 
 @Injectable()
 export class CategoriesService {
