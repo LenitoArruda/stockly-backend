@@ -4,6 +4,9 @@ GET http://localhost:3000/products
 ### Get a product by ID
 GET http://localhost:3000/products/1
 
+### Get a paginated products with filters
+GET http://localhost:3000/products/paginated?minPrice=10&maxPrice=60
+
 ### Create a new product
 POST http://localhost:3000/products
 
