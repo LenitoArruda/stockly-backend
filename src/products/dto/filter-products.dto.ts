@@ -10,8 +10,8 @@ export class FilterProductsDto {
     sku?: string;
 
     @IsOptional()
-    @IsString()
-    category?: string;
+    @IsNumberString()
+    categoryId?: string;
 
     @IsOptional()
     @IsNumberString()

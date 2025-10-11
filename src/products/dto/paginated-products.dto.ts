@@ -1,7 +1,7 @@
-import { Product } from '../entities/product.entity';
+import { ProductResponseDto } from "./product-response.dto";
 
 export class PaginatedProductsDto {
-    data: Product[];
+    data: ProductResponseDto[];
     total: number;
     page: number;
     pageSize: number;

@@ -4,7 +4,8 @@ export class Product {
     sku: string;
     price: number;
     stock: number;
-    category: string;
-    variants: string[];
+    categoryId: number;
     archived: boolean;
+    parentId?: number;
+    attributes?: Record<string, string>;
 }
