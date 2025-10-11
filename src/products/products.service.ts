@@ -84,15 +84,23 @@ export class ProductsService {
     return newProduct;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} product`;
+  findOne(id: number): Product | undefined {
+    return this.products.find(product => product.id === id && !product.archived);
   }
 
-  update(id: number, updateProductDto: UpdateProductDto) {
-    return `This action updates a #${id} product`;
+  update(id: number, updateProductDto: UpdateProductDto): Product | undefined {
+    const product = this.findOne(id);
+    if (product) {
+      Object.assign(product, updateProductDto);
+    }
+    return product;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} product`;
+  remove(id: number): boolean {
+    const product = this.findOne(id);
+    if (product) {
+      product.archived = true;
+    }
+    return true;
   }
 }
