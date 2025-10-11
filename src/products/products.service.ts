@@ -1,4 +1,4 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { Product } from './entities/product.entity';
@@ -8,15 +8,13 @@ import { FilterProductsDto } from './dto/filter-products.dto';
 
 @Injectable()
 export class ProductsService {
-  public products: Product[] = fakesProducts;
-  private readonly logger = new Logger(ProductsService.name);
+  private products: Product[] = fakesProducts;
 
   findAll(): Product[] {
     return this.products.filter(product => !product.archived);
   }
 
   findPaginated(filter: FilterProductsDto): PaginatedProductsDto {
-
     const {
       name,
       sku,
@@ -28,6 +26,7 @@ export class ProductsService {
     } = filter;
 
     let results = this.products.filter((p) => !p.archived);
+
     if (name) {
       results = results.filter((p) =>
         p.name.toLowerCase().includes(name.toLowerCase()),
@@ -73,8 +72,16 @@ export class ProductsService {
     };
   }
 
-  create(createProductDto: CreateProductDto) {
-    return 'This action adds a new product';
+  create(createProductDto: CreateProductDto): Product {
+    const newProduct: Product = {
+      id: this.products.length + 1,
+      ...createProductDto,
+      archived: false,
+    };
+
+    this.products.push(newProduct);
+
+    return newProduct;
   }
 
   findOne(id: number) {
