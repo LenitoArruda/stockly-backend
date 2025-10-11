@@ -13,7 +13,7 @@ export class ProductResponseDto {
     variants: ProductVariantDto[];
 
     static fromEntity(product: Product, allProducts: Product[], categories: Category[]): ProductResponseDto {
-        const categoryName = categories.find(cat => cat.id === product.categoryId)?.name || '';
+        const categoryName = categories.find(cat => cat.id === product.categoryId)?.name || "";
 
         const variants = allProducts
             .filter(p => p.parentId === product.id && !p.archived)
