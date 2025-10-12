@@ -4,10 +4,10 @@ import { UpdateProductDto } from "./dto/update-product.dto";
 import { Product } from "./entities/product.entity";
 import { PaginatedProductsDto } from "./dto/paginated-products.dto";
 import { FilterProductsDto } from "./dto/filter-products.dto";
-import { fakesProducts } from "src/data/products";
+import { fakeProducts } from "src/data/products";
 import { ProductResponseDto } from "./dto/product-response.dto";
 import { Category } from "src/categories/entities/category.entity";
-import { fakesCategories } from "src/data/categories";
+import { fakeCategories } from "src/data/categories";
 import { ProductVariantDto } from "./dto/product-variant.dto";
 import { AlreadyExistsError, NotFoundError } from "src/common/errors";
 import { CreateVariantDto } from "./dto/create-variant.dto";
@@ -15,8 +15,8 @@ import { UpdateVariantDto } from "./dto/update-variant.dto";
 
 @Injectable()
 export class ProductsService {
-  private products: Product[] = fakesProducts;
-  private categories: Category[] = fakesCategories;
+  private products: Product[] = fakeProducts;
+  private categories: Category[] = fakeCategories;
 
   async findAll(): Promise<ProductResponseDto[]> {
     const products = this.products.filter(product => !product.archived);

@@ -1,14 +1,14 @@
 import { Injectable } from "@nestjs/common";
 import { CreateCategoryDto } from "./dto/create-category.dto";
 import { UpdateCategoryDto } from "./dto/update-category.dto";
-import { fakesCategories } from "src/data/categories";
+import { fakeCategories } from "src/data/categories";
 import { Category } from "./entities/category.entity";
 import { AlreadyExistsError, NotFoundError } from "src/common/errors";
 import { CategoryResponseDto } from "./dto/category-response.dto";
 
 @Injectable()
 export class CategoriesService {
-  private categories: Category[] = fakesCategories;
+  private categories: Category[] = fakeCategories;
 
   async create(createCategoryDto: CreateCategoryDto): Promise<CategoryResponseDto> {
     const existingCategory = this.categories.find(cat => cat.name.toLowerCase() === createCategoryDto.name.toLowerCase() && !cat.archived);

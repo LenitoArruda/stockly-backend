@@ -1,6 +1,6 @@
 import { Product } from "src/products/entities/product.entity";
 
-export const fakesProducts: Product[] = [
+export const fakeProducts: Product[] = [
   { id: 1, name: "Wireless Mouse", sku: "ELEC-WIR-BASE-0001", price: 100, stock: 50, categoryId: 1, archived: false },
   { id: 2, name: "Wireless Mouse", sku: "ELEC-WM-128-0002", price: 211.94, stock: 73, categoryId: 1, parentId: 1, attributes: { "memory": "128GB" }, archived: false },
   { id: 3, name: "Wireless Mouse", sku: "ELEC-WM-32G-0003", price: 353.88, stock: 162, categoryId: 1, parentId: 1, attributes: { "memory": "32GB" }, archived: false },
