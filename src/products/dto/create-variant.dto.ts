@@ -26,6 +26,6 @@ export class CreateVariantDto {
     parentId: number;
 
     @IsNotEmpty()
-    @IsArray()
+    @IsObject()
     attributes: Record<string, string>;
 }

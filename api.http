@@ -8,8 +8,8 @@ POST http://localhost:3000/auth/login
 Content-Type: application/json
 
 {
-  "email": "admin@example.com",
-  "password": "123456"
+  "email": "updateduser@example.com",
+  "password": "newpassword123"
 }
 
 ###
@@ -22,7 +22,7 @@ GET http://localhost:3000/products
 Authorization: Bearer {{token}}
 
 ### Get a product by ID
-GET http://localhost:3000/products/by-id/1
+GET http://localhost:3000/products/by-id/83
 Authorization: Bearer {{token}}
 
 ### Get a paginated products with filters
@@ -39,7 +39,8 @@ Content-Type: application/json
   "description": "This is a new product",
   "price": 49.99,
   "categoryId": 1,
-  "stock": 100
+  "stock": 100,
+  "sku": "SKU12445"
 }
 
 ### Create a new variant
@@ -51,8 +52,14 @@ Content-Type: application/json
   "name": "New Product",
   "description": "This is a new product",
   "price": 49.99,
-  "categoryId": 1,
-  "stock": 100
+  "parentId": 1,
+  "stock": 100,
+  "attributes": {
+    "size": "M",
+    "color": "Red",
+    "material": "Cotton"
+  },
+  "sku": "SKU123457"
 }
 
 ### Update a product
@@ -118,7 +125,7 @@ GET http://localhost:3000/users
 Authorization: Bearer {{token}}
 
 ### Get a user by ID
-GET http://localhost:3000/users/by-id/2
+GET http://localhost:3000/users/by-id/3
 Authorization: Bearer {{token}}
 
 ### Create a new user
@@ -134,13 +141,14 @@ Content-Type: application/json
 }
 
 ### Update a user
-PATCH http://localhost:3000/users/1
+PATCH http://localhost:3000/users/3
 Authorization: Bearer {{token}}
 Content-Type: application/json
 
 {
   "email": "updateduser@example.com",
   "name": "Updated User",
+  "password": "newpassword123",
   "role": "manager"
 }
 

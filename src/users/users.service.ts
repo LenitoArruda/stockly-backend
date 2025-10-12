@@ -5,6 +5,7 @@ import { User } from "./entities/user.entity";
 import { fakeUsers } from "src/data/users";
 import { AlreadyExistsError, NotFoundError } from "src/common/errors";
 import { UserResponseDto } from "./dto/user-response.dto";
+import * as bcrypt from "bcrypt";
 
 @Injectable()
 export class UsersService {
@@ -51,6 +52,9 @@ export class UsersService {
 
     if (existingUser)
       throw new AlreadyExistsError("User", `${updateUserDto.email}`, "email");
+
+    if (updateUserDto.password)
+      updateUserDto.password = await bcrypt.hash(updateUserDto.password, 12);
 
     Object.assign(userEntity, updateUserDto);
 

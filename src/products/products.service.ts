@@ -162,11 +162,14 @@ export class ProductsService {
     return ProductVariantDto.fromEntity(newVariant);
   }
 
-  async findOne(id: number): Promise<ProductResponseDto> {
+  async findOne(id: number): Promise<ProductResponseDto | ProductVariantDto> {
     const productEntity = this.products.find(product => product.id === id && !product.archived);
 
     if (!productEntity)
       throw new NotFoundError("Product", String(id));
+
+    if (productEntity.parentId)
+      return ProductVariantDto.fromEntity(productEntity);
 
     return ProductResponseDto.fromEntity(productEntity, this.products, this.categories);
   }
@@ -202,10 +205,10 @@ export class ProductsService {
 
     Object.assign(productEntity, updateVariantDto);
 
-    return ProductResponseDto.fromEntity(productEntity, this.products, this.categories);
+    return ProductVariantDto.fromEntity(productEntity);
   }
 
-  async remove(id: number) {
+  async remove(id: number): Promise<void> {
     const productEntity = this.products.find(product => product.id === id && !product.archived);
 
     if (!productEntity)

@@ -58,7 +58,7 @@ export class CategoriesService {
     return CategoryResponseDto.fromEntity(category);
   }
 
-  async remove(id: number) {
+  async remove(id: number): Promise<void> {
     const category = this.categories.find(category => category.id === id && !category.archived);
 
     if (!category)

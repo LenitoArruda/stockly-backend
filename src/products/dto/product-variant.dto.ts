@@ -6,7 +6,7 @@ export class ProductVariantDto {
   sku: string;
   price: number;
   stock: number;
-  attributes?: Record<string, string>;
+  attributes: Record<string, string>;
 
   static fromEntity(variant: Product): ProductVariantDto {
     return {

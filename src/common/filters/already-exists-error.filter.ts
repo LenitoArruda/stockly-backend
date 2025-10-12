@@ -4,13 +4,13 @@ import { AlreadyExistsError } from "../errors";
 
 @Catch(AlreadyExistsError)
 export class AlreadyExistsErrorFilter implements ExceptionFilter {
-    catch(exception: any, host: ArgumentsHost) {
+    catch(exception: AlreadyExistsError, host: ArgumentsHost) {
         const ctx = host.switchToHttp();
         const response = ctx.getResponse<Response>();
 
         response.status(409).json({
             statusCode: 409,
-            message: "Already exists",
+            message: exception.message,
         });
     }
 };
