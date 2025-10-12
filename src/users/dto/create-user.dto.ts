@@ -11,6 +11,10 @@ export class CreateUserDto {
 
     @IsNotEmpty()
     @IsString()
+    name: string;
+
+    @IsNotEmpty()
+    @IsString()
     @IsIn(["admin", "manager"])
     role: string;
 }

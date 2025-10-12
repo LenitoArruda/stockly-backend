@@ -4,4 +4,5 @@ export class User {
     name: string;
     password: string;
     role: string;
+    archived: boolean;
 }

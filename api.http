@@ -23,18 +23,23 @@ Authorization: Bearer {{token}}
 
 ### Get a product by ID
 GET http://localhost:3000/products/by-id/1
+Authorization: Bearer {{token}}
 
 ### Get a paginated products with filters
 GET http://localhost:3000/products/paginated?minPrice=10&maxPrice=60
+Authorization: Bearer {{token}}
 
 ### Create a new product
 POST http://localhost:3000/products
+Authorization: Bearer {{token}}
 
 ### Update a product
 PATCH http://localhost:3000/products/1
+Authorization: Bearer {{token}}
 
 ### Delete a product
 DELETE http://localhost:3000/products/1
+Authorization: Bearer {{token}}
 
 ######################### Categories Routes #########################
 
@@ -44,13 +49,38 @@ Authorization: Bearer {{token}}
 
 ### Get a category by ID
 GET http://localhost:3000/categories/by-id/1
+Authorization: Bearer {{token}}
 
 ### Create a new category
 POST http://localhost:3000/categories
+Authorization: Bearer {{token}}
 
 ### Update a category
 PATCH http://localhost:3000/categories/1
+Authorization: Bearer {{token}}
 
 ### Delete a category
 DELETE http://localhost:3000/categories/2
+Authorization: Bearer {{token}}
+
+######################### Users Routes #########################
+
+### Get all users
+GET http://localhost:3000/users
+Authorization: Bearer {{token}}
+
+### Get a user by ID
+GET http://localhost:3000/users/1
+Authorization: Bearer {{token}}
+
+### Create a new user
+POST http://localhost:3000/users
+Authorization: Bearer {{token}}
+
+### Update a user
+PATCH http://localhost:3000/users/1
+Authorization: Bearer {{token}}
+
+### Delete a user
+DELETE http://localhost:3000/users/1
 Authorization: Bearer {{token}}
