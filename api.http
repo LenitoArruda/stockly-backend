@@ -1,19 +1,25 @@
-######################### Products Routes #########################
+
+
+######################### Login Routes #########################
 
 ### User Login
+# @name admin_jwt_login
 POST http://localhost:3000/auth/login
 Content-Type: application/json
 
 {
   "email": "manager@example.com",
-  "password": "12"
+  "password": "123456"
 }
+
+###
+@token={{admin_jwt_login.response.body.access_token}}
 
 ######################### Products Routes #########################
 
 ### Get all products
 GET http://localhost:3000/products
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjIsInJvbGUiOiJtYW5hZ2VyIiwiaWF0IjoxNzYwMjMyNDYxLCJleHAiOjE3NjAyMzYwNjF9.rxPKXu21MAow5_XAkUHH27bROw-mFz_jfB8c8WMQ1WY
+Authorization: Bearer {{token}}
 
 ### Get a product by ID
 GET http://localhost:3000/products/by-id/1
@@ -34,6 +40,7 @@ DELETE http://localhost:3000/products/1
 
 ### Get all categories
 GET http://localhost:3000/categories
+Authorization: Bearer {{token}}
 
 ### Get a category by ID
 GET http://localhost:3000/categories/by-id/1
@@ -45,4 +52,5 @@ POST http://localhost:3000/categories
 PATCH http://localhost:3000/categories/1
 
 ### Delete a category
-DELETE http://localhost:3000/categories/1
+DELETE http://localhost:3000/categories/2
+Authorization: Bearer {{token}}

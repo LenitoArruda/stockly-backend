@@ -6,7 +6,9 @@ import { AlreadyExistsErrorFilter } from "./common/filters/already-exists-error.
 import { InvalidCredentialsErrorFilter } from "./auth/filters/invalid-credentials-error.filter";
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule, {
+    logger: ['log', 'error', 'warn', 'debug', 'verbose'],
+  });
 
   app.useGlobalFilters(
     new NotFoundErrorFilter(),

@@ -3,8 +3,12 @@ import { UsersService } from "./users.service";
 import { CreateUserDto } from "./dto/create-user.dto";
 import { UpdateUserDto } from "./dto/update-user.dto";
 import { AuthGuard } from "src/auth/auth.guard";
+import { RolesGuard } from "src/auth/roles/roles.guard";
+import { UserRoles } from "src/auth/roles/roles";
+import { Roles } from "src/auth/roles/roles.decorator";
 
-@UseGuards(AuthGuard)
+@Roles(UserRoles.Admin)
+@UseGuards(AuthGuard, RolesGuard)
 @Controller("users")
 export class UsersController {
   constructor(private readonly usersService: UsersService) { }
