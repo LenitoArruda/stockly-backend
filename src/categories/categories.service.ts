@@ -1,20 +1,22 @@
-import { Injectable } from "@nestjs/common";
-import { CreateCategoryDto } from "./dto/create-category.dto";
-import { UpdateCategoryDto } from "./dto/update-category.dto";
-import { fakeCategories } from "src/data/categories";
-import { Category } from "./entities/category.entity";
-import { AlreadyExistsError, NotFoundError } from "src/common/errors";
-import { CategoryResponseDto } from "./dto/category-response.dto";
+import { Injectable } from '@nestjs/common';
+import { CreateCategoryDto } from './dto/create-category.dto';
+import { UpdateCategoryDto } from './dto/update-category.dto';
+import { fakeCategories } from 'src/data/categories';
+import { Category } from './entities/category.entity';
+import { AlreadyExistsError, NotFoundError } from 'src/common/errors';
+import { CategoryResponseDto } from './dto/category-response.dto';
 
 @Injectable()
 export class CategoriesService {
   private categories: Category[] = fakeCategories;
 
   async create(createCategoryDto: CreateCategoryDto): Promise<CategoryResponseDto> {
-    const existingCategory = this.categories.find(cat => cat.name.toLowerCase() === createCategoryDto.name.toLowerCase() && !cat.archived);
+    const existingCategory = this.categories.find(
+      (cat) => cat.name.toLowerCase() === createCategoryDto.name.toLowerCase() && !cat.archived,
+    );
 
     if (existingCategory)
-      throw new AlreadyExistsError("Category", `${createCategoryDto.name}`, "name");
+      throw new AlreadyExistsError('Category', `${createCategoryDto.name}`, 'name');
 
     const newCategory: Category = {
       id: this.categories.length + 1,
@@ -29,29 +31,32 @@ export class CategoriesService {
 
   async findAll(): Promise<CategoryResponseDto[]> {
     return this.categories
-      .filter(category => !category.archived)
-      .map(cat => CategoryResponseDto.fromEntity(cat));
+      .filter((category) => !category.archived)
+      .map((cat) => CategoryResponseDto.fromEntity(cat));
   }
 
   async findOne(id: number): Promise<CategoryResponseDto> {
-    const category = this.categories.find(category => category.id === id && !category.archived);
+    const category = this.categories.find((category) => category.id === id && !category.archived);
 
-    if (!category)
-      throw new NotFoundError("Category", String(id));
+    if (!category) throw new NotFoundError('Category', String(id));
 
     return CategoryResponseDto.fromEntity(category);
   }
 
   async update(id: number, updateCategoryDto: UpdateCategoryDto): Promise<CategoryResponseDto> {
-    const category = this.categories.find(category => category.id === id && !category.archived);
+    const category = this.categories.find((category) => category.id === id && !category.archived);
 
-    if (!category)
-      throw new NotFoundError("Category", String(id));
+    if (!category) throw new NotFoundError('Category', String(id));
 
-    const existingCategory = this.categories.find(cat => cat.name.toLowerCase() === updateCategoryDto.name?.toLowerCase() && cat.id !== id && !cat.archived);
+    const existingCategory = this.categories.find(
+      (cat) =>
+        cat.name.toLowerCase() === updateCategoryDto.name?.toLowerCase() &&
+        cat.id !== id &&
+        !cat.archived,
+    );
 
     if (existingCategory)
-      throw new AlreadyExistsError("Category", `${updateCategoryDto.name}`, "name");
+      throw new AlreadyExistsError('Category', `${updateCategoryDto.name}`, 'name');
 
     Object.assign(category, updateCategoryDto);
 
@@ -59,10 +64,9 @@ export class CategoriesService {
   }
 
   async remove(id: number): Promise<void> {
-    const category = this.categories.find(category => category.id === id && !category.archived);
+    const category = this.categories.find((category) => category.id === id && !category.archived);
 
-    if (!category)
-      throw new NotFoundError("Category", String(id));
+    if (!category) throw new NotFoundError('Category', String(id));
 
     category.archived = true;
   }

@@ -1,5 +1,5 @@
 export class Category {
-    id: number;
-    name: string;
-    archived: boolean;
+  id: number;
+  name: string;
+  archived: boolean;
 }
