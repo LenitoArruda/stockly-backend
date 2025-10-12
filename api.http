@@ -8,7 +8,7 @@ POST http://localhost:3000/auth/login
 Content-Type: application/json
 
 {
-  "email": "manager@example.com",
+  "email": "admin@example.com",
   "password": "123456"
 }
 
@@ -32,10 +32,48 @@ Authorization: Bearer {{token}}
 ### Create a new product
 POST http://localhost:3000/products
 Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "name": "New Product",
+  "description": "This is a new product",
+  "price": 49.99,
+  "categoryId": 1,
+  "stock": 100
+}
+
+### Create a new variant
+POST http://localhost:3000/products/variant
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "name": "New Product",
+  "description": "This is a new product",
+  "price": 49.99,
+  "categoryId": 1,
+  "stock": 100
+}
 
 ### Update a product
 PATCH http://localhost:3000/products/1
 Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "name": "Updated Product Name",
+  "price": 59.99
+}
+
+### Update a variant
+PATCH http://localhost:3000/products/variant/1
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "name": "Updated Variant Name",
+  "price": 39.99
+}
 
 ### Delete a product
 DELETE http://localhost:3000/products/1
@@ -54,10 +92,20 @@ Authorization: Bearer {{token}}
 ### Create a new category
 POST http://localhost:3000/categories
 Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "name": "New Category"
+}
 
 ### Update a category
 PATCH http://localhost:3000/categories/1
 Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "name": "Updated Category Name"
+}
 
 ### Delete a category
 DELETE http://localhost:3000/categories/2
@@ -70,16 +118,31 @@ GET http://localhost:3000/users
 Authorization: Bearer {{token}}
 
 ### Get a user by ID
-GET http://localhost:3000/users/1
+GET http://localhost:3000/users/by-id/2
 Authorization: Bearer {{token}}
 
 ### Create a new user
 POST http://localhost:3000/users
 Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "email": "newuser@example.com",
+  "password": "123456",
+  "name": "New User",
+  "role": "manager"
+}
 
 ### Update a user
 PATCH http://localhost:3000/users/1
 Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "email": "updateduser@example.com",
+  "name": "Updated User",
+  "role": "manager"
+}
 
 ### Delete a user
 DELETE http://localhost:3000/users/1

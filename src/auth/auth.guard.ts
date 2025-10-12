@@ -1,5 +1,4 @@
 import { CanActivate, ExecutionContext, Injectable, UnauthorizedException } from "@nestjs/common";
-import { Observable } from "rxjs";
 import { Request } from "express";
 import { JwtService } from "@nestjs/jwt";
 
@@ -13,6 +12,7 @@ export class AuthGuard implements CanActivate {
 
     const request = context.switchToHttp().getRequest();
     const token = this.extractTokenFromHeader(request);
+
     if (!token)
       throw new UnauthorizedException();
 
@@ -22,6 +22,7 @@ export class AuthGuard implements CanActivate {
     } catch (error) {
       throw new UnauthorizedException();
     }
+
     return true;
   }
 
