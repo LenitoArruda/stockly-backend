@@ -1,7 +1,19 @@
 ######################### Products Routes #########################
 
+### User Login
+POST http://localhost:3000/auth/login
+Content-Type: application/json
+
+{
+  "email": "manager@example.com",
+  "password": "12"
+}
+
+######################### Products Routes #########################
+
 ### Get all products
 GET http://localhost:3000/products
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjIsInJvbGUiOiJtYW5hZ2VyIiwiaWF0IjoxNzYwMjMyNDYxLCJleHAiOjE3NjAyMzYwNjF9.rxPKXu21MAow5_XAkUHH27bROw-mFz_jfB8c8WMQ1WY
 
 ### Get a product by ID
 GET http://localhost:3000/products/by-id/1
