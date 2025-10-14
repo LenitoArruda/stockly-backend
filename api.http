@@ -15,6 +15,14 @@ Content-Type: application/json
 ###
 @token={{admin_jwt_login.response.body.access_token}}
 
+### Get current user info
+GET http://localhost:3000/auth/me
+Authorization: Bearer {{token}}
+
+### Logout
+POST http://localhost:3000/auth/logout
+Authorization: Bearer {{token}}
+
 ######################### Products Routes #########################
 
 ### Get all products
