@@ -31,12 +31,11 @@ export class AuthService {
 
     const token = this.jwtService.sign(payload);
 
-    // 🔑 Setar cookie seguro
     res.cookie('session', token, {
       httpOnly: true,
-      secure: true, // em produção precisa estar HTTPS
-      sameSite: 'none', // necessário para cross-domain (Vercel + Railway)
-      maxAge: 1000 * 60 * 60 * 24, // 1 dia
+      secure: true,
+      sameSite: 'none',
+      maxAge: 1000 * 60 * 60 * 24,
     });
 
     return LoginResponseDto.fromEntity(user, token);
