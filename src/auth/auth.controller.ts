@@ -1,4 +1,5 @@
 import { Body, Controller, Get, Post, UseGuards, Request, Res } from '@nestjs/common';
+import type { Response } from 'express'; // 👈 importante
 import { LoginDto } from './dto/login.dto';
 import { AuthService } from './auth.service';
 import { AuthGuard } from './auth.guard';
@@ -8,8 +9,8 @@ export class AuthController {
   constructor(private authService: AuthService) {}
 
   @Post('login')
-  login(@Body() loginDto: LoginDto) {
-    return this.authService.login(loginDto);
+  async login(@Body() loginDto: LoginDto, @Res({ passthrough: true }) res: Response) {
+    return this.authService.login(loginDto, res);
   }
 
   @Get('me')
@@ -20,13 +21,13 @@ export class AuthController {
 
   @Post('logout')
   @UseGuards(AuthGuard)
-  async logout(@Res() res) {
+  async logout(@Res({ passthrough: true }) res: Response) {
     res.clearCookie('session', {
       httpOnly: true,
-      secure: false,
-      sameSite: 'lax',
+      secure: true,
+      sameSite: 'none',
     });
 
-    return res.status(204).json({ message: 'Logged out successfully' });
+    return { message: 'Logged out successfully' };
   }
 }
