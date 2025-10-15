@@ -34,7 +34,7 @@ GET http://localhost:3000/products/by-id/83
 Authorization: Bearer {{token}}
 
 ### Get a paginated products with filters
-GET http://localhost:3000/products/paginated?minPrice=10&maxPrice=60
+GET http://localhost:3000/products/paginated
 Authorization: Bearer {{token}}
 
 ### Create a new product

@@ -768,7 +768,7 @@ export const fakeProducts: Product[] = [
     stock: 105,
     categoryId: 5,
     parentId: 71,
-    attributes: { size: 'Large' },
+    attributes: { size: 'Large', test: 'Large', color: 'Orange', material: 'Rubber' },
     archived: false,
   },
   {

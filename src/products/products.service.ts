@@ -33,8 +33,8 @@ export class ProductsService {
       maxPrice,
       page = '1',
       pageSize = '10',
-      sortBy,
-      sortOrder = 'asc',
+      sortBy = 'createdAt',
+      sortOrder = 'desc',
     } = filter;
 
     let results = this.products.filter((p) => !p.archived && !p.parentId);
@@ -50,7 +50,7 @@ export class ProductsService {
     if (maxPrice) results = results.filter((p) => p.price <= +maxPrice);
 
     if (sortBy) {
-      results = results.sort((a, b) => {
+      results = results.reverse().sort((a, b) => {
         let valA: any;
         let valB: any;
 
@@ -75,8 +75,12 @@ export class ProductsService {
             valA = a.price;
             valB = b.price;
             break;
+          case 'createdAt':
+            valA = a.id;
+            valB = b.id;
+            break;
           default:
-            return 0;
+            0;
         }
 
         if (valA < valB) return sortOrder === 'asc' ? -1 : 1;
@@ -211,6 +215,12 @@ export class ProductsService {
     const productEntity = this.products.find((product) => product.id === id && !product.archived);
 
     if (!productEntity) throw new NotFoundError('Product', String(id));
+
+    this.products.forEach((product) => {
+      if (product.parentId === productEntity.id && !product.archived) {
+        product.archived = true;
+      }
+    });
 
     productEntity.archived = true;
   }

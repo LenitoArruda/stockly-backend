@@ -30,7 +30,7 @@ export class FilterProductsDto {
   pageSize?: string;
 
   @IsOptional()
-  @IsIn(['name', 'sku', 'category', 'stock', 'price'])
+  @IsIn(['name', 'sku', 'category', 'stock', 'price', 'createdAt'])
   sortBy?: string;
 
   @IsOptional()
