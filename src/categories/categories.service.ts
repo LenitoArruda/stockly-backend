@@ -30,9 +30,9 @@ export class CategoriesService {
   }
 
   async findAll(): Promise<CategoryResponseDto[]> {
-    return this.categories
-      .filter((category) => !category.archived)
-      .map((cat) => CategoryResponseDto.fromEntity(cat));
+    const categories = this.categories.filter((category) => !category.archived);
+    categories.reverse();
+    return categories.map((cat) => CategoryResponseDto.fromEntity(cat));
   }
 
   async findOne(id: number): Promise<CategoryResponseDto> {

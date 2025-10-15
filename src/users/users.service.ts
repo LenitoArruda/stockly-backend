@@ -31,6 +31,7 @@ export class UsersService {
 
   async findAll(): Promise<UserResponseDto[]> {
     const users = this.users.filter((user) => !user.archived);
+    users.reverse();
     return users.map((user) => UserResponseDto.fromEntity(user));
   }
 
