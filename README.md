@@ -53,6 +53,8 @@ yarn start:dev
 
 ---
 
+Obs: You can acces api.http to try API routers using Rest Client extension
+
 ## 🔐 Authentication Flow
 
 1. User sends email/password to `/auth/login`
